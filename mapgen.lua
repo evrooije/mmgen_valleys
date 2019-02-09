@@ -168,11 +168,10 @@ local function calculate_terrain_at_point(base_ground, v2, v3, v4, v5)
 	return mountain_ground, slopes, river, v2
 end
 
-local data = {}
 
 
 -- THE MAPGEN FUNCTION
-function vmg.generate(minp, maxp, seed)
+function vmg.generate(current_layer, vm, area, data, minp, maxp, offset_minp, offset_maxp)
 	if vmg.registered_on_first_mapgen then -- Run callbacks
 		for _, f in ipairs(vmg.registered_on_first_mapgen) do
 			f()
@@ -238,15 +237,7 @@ function vmg.generate(minp, maxp, seed)
 	local c_air = minetest.get_content_id("air")
 	local c_ignore = minetest.get_content_id("ignore")
 
-	-- The VoxelManipulator, a complicated but speedy method to set many nodes at the same time
-	local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
-	vm:get_data(data) -- data is the original array of content IDs (solely or mostly air)
-	-- Be careful: emin ≠ minp and emax ≠ maxp !
-	-- The data array is not limited by minp and maxp. It exceeds it by 16 nodes in the 6 directions.
-	-- The real limits of data array are emin and emax.
-	-- The VoxelArea is used to convert a position into an index for the array.
-	local a = VoxelArea:new({MinEdge = emin, MaxEdge = emax})
-	local ystride = a.ystride -- Tip : the ystride of a VoxelArea is the number to add to the array index to get the index of the position above. It's faster because it avoids to completely recalculate the index.
+	local ystride = area.ystride -- Tip : the ystride of a VoxelArea is the number to add to the array index to get the index of the position above. It's faster because it avoids to completely recalculate the index.
 
 	local chulens = vector.add(vector.subtract(maxp, minp), 1) -- Size of the generated area, used by noisemaps
 	local chulens_sup = {x = chulens.x, y = chulens.y + 6, z = chulens.z} -- for the noise #6 that needs extra values
@@ -388,8 +379,9 @@ function vmg.generate(minp, maxp, seed)
 			end
 
 			local column = {}
-			for y = maxp.y + 6, minp.y, -1 do -- for each node in vertical line
-				local ivm = a:index(x, y, z) -- index of the data array, matching the position {x, y, z}
+			local y = offset_maxp.y + 6;
+			for global_y = maxp.y + 6, minp.y, -1 do -- for each node in vertical line
+				local ivm = area:index(x, global_y, z) -- index of the data array, matching the position {x, y, z}
 				local v6 = n6[i3d_sup] -- take the noise values for 3D noises
 				local v8, v9, v10, v11, v12
 
@@ -401,7 +393,7 @@ function vmg.generate(minp, maxp, seed)
 				local in_ground = v6 * slopes > y - mountain_ground
 				column[y] = in_ground
 
-				if y <= maxp.y then
+				if global_y <= maxp.y then
 					if in_ground then -- if pos is in the ground
 						local is_cave = false
 						local sr, v19, v20
@@ -497,7 +489,8 @@ function vmg.generate(minp, maxp, seed)
 											thickness = thickness
 										}
 
-										vmg.choose_generate_plant(conditions, pos, data, a, ivm2)
+										local global_pos = {x = x, y = global_y, z = z}
+										vmg.choose_generate_plant(conditions, global_pos, data, area, ivm2)
 									end
 
 									y = y - 1
@@ -523,7 +516,7 @@ function vmg.generate(minp, maxp, seed)
 									data[ivm] = c_stone
 								end
 							end
-						elseif simple_caves and y <= lava_max_height and sr < math.ceil(-y/10000) and y > minp.y and data[ivm - ystride] == c_stone then
+						elseif simple_caves and y <= lava_max_height and sr < math.ceil(-y/10000) and global_y > minp.y and data[ivm - ystride] == c_stone then
 							data[ivm] = c_lava
 						elseif (not simple_caves) and v11 + v12 > 2 ^ (y / lava_depth) and y <= lava_max_height then
 							data[ivm] = c_lava
@@ -584,6 +577,7 @@ function vmg.generate(minp, maxp, seed)
 					i3d = i3d + i3d_incrY -- decrement i3d by one line
 				end
 				i3d_sup = i3d_sup + i3d_incrY -- idem
+				y = y - 1
 			end
 			i2d = i2d + i2d_incrZ -- increment i2d by one Z
 			i3d = i3d + i3d_incrZ -- idem for i3d
@@ -595,8 +589,8 @@ function vmg.generate(minp, maxp, seed)
 	end
 	vmg.execute_after_mapgen() -- needed for jungletree roots
 
-	if darkage_mapgen then -- Compatibility with darkage mod by CraigyDavi. If you see error messages like "WARNING: unknown global variable" at this line, don't worry :)
-		darkage_mapgen(data, a, minp, maxp, seed)
+	if mmgen_darkage then -- Compatibility with darkage mod by CraigyDavi. If you see error messages like "WARNING: unknown global variable" at this line, don't worry :)
+		mmgen_darkage(current_layer, vm, area, data, minp, maxp, offset_minp, offset_maxp)
 	end
 
 	-- After data collecting, check timer
@@ -606,15 +600,9 @@ function vmg.generate(minp, maxp, seed)
 		print("[MMgen Valleys] Writing data ...")
 	end
 
-	-- execute voxelmanip boring stuff to write to the map...
-	vm:set_data(data)
 	if ores then
 		minetest.generate_ores(vm, minp, maxp)
 	end
-	vm:set_lighting({day = 0, night = 0})
-	vm:calc_lighting()
-	vm:update_liquids()
-	vm:write_to_map()
 
 	-- Now mapgen is finished. What an adventure for just generating a chunk ! I hope your processor is speedy and you have enough RAM !
 	local t4 = os.clock()
