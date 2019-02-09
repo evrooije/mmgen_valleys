@@ -1,12 +1,12 @@
 vmg = {}
 vmg.version = "2.3"
 
-vmg.path = minetest.get_modpath("valleys_mapgen")
+vmg.path = minetest.get_modpath("mmgen_valleys")
 
 vmg.loglevel = tonumber(minetest.setting_get("vmg_log_level") or 0)
 
 if vmg.loglevel >= 2 then
-	print("[Valleys Mapgen] Loading basic functions ...")
+	print("[MMgen Valleys] Loading basic functions ...")
 end
 
 -- Check if the C++ mapgen is in use.
@@ -88,7 +88,7 @@ function displaytime(time)
 end
 
 if vmg.loglevel >= 2 then
-	print("[Valleys Mapgen] Loading settings API ...")
+	print("[MMgen Valleys] Loading settings API ...")
 end
 
 -- Settings are handled by a separate file, settings.lua
@@ -111,12 +111,12 @@ end
 table.insert(minetest.registered_on_generateds, 1, vmg.generate)
 
 if vmg.loglevel >= 2 then
-	print("[Valleys Mapgen] Loading nodes ...")
+	print("[MMgen Valleys] Loading nodes ...")
 end
 
 -- Node definitions
 dofile(vmg.path .. "/nodes.lua")
 
 if vmg.loglevel >= 1 then
-	print("[Valleys Mapgen] Loaded !")
+	print("[MMgen Valleys] Loaded !")
 end

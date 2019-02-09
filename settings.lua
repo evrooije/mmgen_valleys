@@ -92,7 +92,7 @@ function vmg.define(flag, default, write_to_config)
 end
 
 if vmg.loglevel >= 2 then
-	print("[Valleys Mapgen] Loading mapgen ...")
+	print("[MMgen Valleys] Loading mapgen ...")
 end
 
 -- Choose the appropriate mapgen version
@@ -103,7 +103,7 @@ if vmg.valleys_c then
 elseif version == vmg.version then
 	dofile(vmg.path .. "/mapgen.lua")
 elseif not pcall(dofile, vmg.path .. "/old_mapgens/" .. version .. ".lua") then
-	print("[Valleys Mapgen] Missing compatibility mapgen for version " .. version .. ". Using latest version, you may see artifacts.")
+	print("[MMgen Valleys] Missing compatibility mapgen for version " .. version .. ". Using latest version, you may see artifacts.")
 end
 
 -- Write settings after loading

@@ -17,7 +17,7 @@ minetest.override_item("default:river_water_source", {liquid_range = waterflow})
 minetest.override_item("default:river_water_flowing", {liquid_range = waterflow})
 
 -- Add silt
-minetest.register_node("valleys_mapgen:silt", {
+minetest.register_node("mmgen_valleys:silt", {
 	description = "Silt",
 	tiles = {"vmg_silt.png"},
 	is_ground_content = true,
@@ -26,7 +26,7 @@ minetest.register_node("valleys_mapgen:silt", {
 })
 
 -- I don't like the default:clay, this does not look like clay. So add red clay.
-minetest.register_node("valleys_mapgen:red_clay", {
+minetest.register_node("mmgen_valleys:red_clay", {
 	description = "Red Clay",
 	tiles = {"vmg_red_clay.png"},
 	is_ground_content = true,
@@ -39,7 +39,7 @@ minetest.override_item("default:clay", {description = "White Clay"})
 -- Add dirts
 local function register_dirts(readname)
 	local name = readname:lower()
-	local itemstr_dirt = "valleys_mapgen:dirt_" .. name
+	local itemstr_dirt = "mmgen_valleys:dirt_" .. name
 	local itemstr_lawn = itemstr_dirt .. "_with_grass"
 	local itemstr_dry = itemstr_dirt .. "_with_dry_grass"
 	local itemstr_snow = itemstr_dirt .. "_with_snow"
@@ -220,10 +220,10 @@ for _, tree in ipairs(vmg.treelist) do
 			fixed = { {-radius, -0.5, -radius, radius, 0.5, radius}, }
 		}
 	end
-	minetest.register_node("valleys_mapgen:"..tree.name.."_tree", node_d)
+	minetest.register_node("mmgen_valleys:"..tree.name.."_tree", node_d)
 
 	-- planks that come from the tree
-	minetest.register_node("valleys_mapgen:"..tree.name.."_wood", {
+	minetest.register_node("mmgen_valleys:"..tree.name.."_wood", {
 		description = tree.desc.." Planks",
 		tiles = {"vmg_"..tree.name.."_wood.png"},
 		is_ground_content = true,
@@ -233,14 +233,14 @@ for _, tree in ipairs(vmg.treelist) do
 
 	-- how to get the planks
 	minetest.register_craft({
-		output = "valleys_mapgen:"..tree.name.."_wood 5",
+		output = "mmgen_valleys:"..tree.name.."_wood 5",
 		recipe = {
-			{"valleys_mapgen:"..tree.name.."_tree"}
+			{"mmgen_valleys:"..tree.name.."_tree"}
 		}
 	})
 
 	-- the tree's sapling form
-	minetest.register_node("valleys_mapgen:"..tree.name.."_sapling", {
+	minetest.register_node("mmgen_valleys:"..tree.name.."_sapling", {
 		description = tree.desc.." Sapling",
 		drawtype = "plantlike",
 		visual_scale = 1.0,
@@ -259,7 +259,7 @@ for _, tree in ipairs(vmg.treelist) do
 	})
 
 	-- leaves for the tree
-	minetest.register_node("valleys_mapgen:"..tree.name.."_"..tree.leaf.."", {
+	minetest.register_node("mmgen_valleys:"..tree.name.."_"..tree.leaf.."", {
 		description = tree.desc.." "..tree.leaf_desc.."",
 		drawtype = "allfaces_optional",
 		waving = 1,
@@ -271,8 +271,8 @@ for _, tree in ipairs(vmg.treelist) do
 		drop = {
 			max_items = 1,
 			items = {
-				{items = {"valleys_mapgen:"..tree.name.."_sapling"}, rarity = tree.drop_rarity },
-				{items = {"valleys_mapgen:"..tree.name.."_"..tree.leaf..""} }
+				{items = {"mmgen_valleys:"..tree.name.."_sapling"}, rarity = tree.drop_rarity },
+				{items = {"mmgen_valleys:"..tree.name.."_"..tree.leaf..""} }
 			}
 		},
 		sounds = default.node_sound_leaves_defaults(),
@@ -281,7 +281,7 @@ for _, tree in ipairs(vmg.treelist) do
 
 	-- appropriate fruit
 	if tree.fruit then
-		minetest.register_node("valleys_mapgen:"..tree.fruit.."", {
+		minetest.register_node("mmgen_valleys:"..tree.fruit.."", {
 			description = tree.fruit_desc,
 			drawtype = "plantlike",
 			visual_scale = 1.0,
@@ -302,7 +302,7 @@ for _, tree in ipairs(vmg.treelist) do
 			sounds = default.node_sound_leaves_defaults(),
 			after_place_node = function(pos, placer, itemstack)
 				if placer:is_player() then
-					minetest.set_node(pos, {name="valleys_mapgen:"..tree.fruit.."", param2=1})
+					minetest.set_node(pos, {name="mmgen_valleys:"..tree.fruit.."", param2=1})
 				end
 			end,
 		})
@@ -312,7 +312,7 @@ for _, tree in ipairs(vmg.treelist) do
 	if minetest.get_modpath("stairs") then
 		stairs.register_stair_and_slab(
 			"vmg_"..tree.name.."_tree",
-			"valleys_mapgen:"..tree.name.."_tree",
+			"mmgen_valleys:"..tree.name.."_tree",
 			{snappy=1, choppy=2, oddly_breakable_by_hand=1, flammable=2 },
 			{	"vmg_"..tree.name.."_tree_top.png",
 				"vmg_"..tree.name.."_tree_top.png",
@@ -324,7 +324,7 @@ for _, tree in ipairs(vmg.treelist) do
 		)
 		stairs.register_stair_and_slab(
 			"vmg_"..tree.name.."_wood",
-			"valleys_mapgen:"..tree.name.."_wood",
+			"mmgen_valleys:"..tree.name.."_wood",
 			{ snappy=1, choppy=2, oddly_breakable_by_hand=2, flammable=3 },
 			{"vmg_"..tree.name.."_wood.png" },
 			tree.desc.." Planks Stair",
@@ -379,7 +379,7 @@ for i in ipairs(vmg.plantlist) do
 		plantgroups = {snappy=3,flammable=2,flower=1,flora=1,attached_node=1,color_white=1}
 	end
 
-	minetest.register_node("valleys_mapgen:"..plantname.."", {
+	minetest.register_node("mmgen_valleys:"..plantname.."", {
 		description = plantdesc,
 		drawtype = "plantlike",
 		tiles = {"vmg_"..plantname..".png"},
@@ -399,7 +399,7 @@ for i in ipairs(vmg.plantlist) do
 end
 
 
-minetest.register_node("valleys_mapgen:mangrove_roots", {
+minetest.register_node("mmgen_valleys:mangrove_roots", {
 	description = "Mangrove Roots",
 	drawtype = "plantlike",
 	tiles = {"vmg_mangrove_roots.png"},
@@ -409,7 +409,7 @@ minetest.register_node("valleys_mapgen:mangrove_roots", {
 	sounds = default.node_sound_wood_defaults(),
 })
 
-minetest.register_node("valleys_mapgen:huge_mushroom_cap", {
+minetest.register_node("mmgen_valleys:huge_mushroom_cap", {
 	description = "Huge Mushroom Cap",
 	tiles = {"vmg_mushroom_giant_cap.png", "vmg_mushroom_giant_under.png", "vmg_mushroom_giant_cap.png"},
 	is_ground_content = false,
@@ -426,7 +426,7 @@ minetest.register_node("valleys_mapgen:huge_mushroom_cap", {
 	groups = {oddly_breakable_by_hand=1, dig_immediate=3, flammable=2, plant=1, leafdecay=1},
 })
 
-minetest.register_node("valleys_mapgen:giant_mushroom_cap", {
+minetest.register_node("mmgen_valleys:giant_mushroom_cap", {
 	description = "Giant Mushroom Cap",
 	tiles = {"vmg_mushroom_giant_cap.png", "vmg_mushroom_giant_under.png", "vmg_mushroom_giant_cap.png"},
 	is_ground_content = false,
@@ -444,7 +444,7 @@ minetest.register_node("valleys_mapgen:giant_mushroom_cap", {
 	groups = {oddly_breakable_by_hand=1, dig_immediate=3, flammable=2, plant=1, leafdecay=1},
 })
 
-minetest.register_node("valleys_mapgen:giant_mushroom_stem", {
+minetest.register_node("mmgen_valleys:giant_mushroom_stem", {
 	description = "Giant Mushroom Stem",
 	tiles = {"vmg_mushroom_giant_under.png", "vmg_mushroom_giant_under.png", "vmg_mushroom_giant_stem.png"},
 	is_ground_content = false,
@@ -458,11 +458,11 @@ minetest.register_node("valleys_mapgen:giant_mushroom_stem", {
 minetest.register_craft({
 	output = "default:wood",
 	recipe = {
-		{"valleys_mapgen:giant_mushroom_stem"}
+		{"mmgen_valleys:giant_mushroom_stem"}
 	}
 })
 
-minetest.register_craftitem("valleys_mapgen:mushroom_steak", {
+minetest.register_craftitem("mmgen_valleys:mushroom_steak", {
 	description = "Mushroom Steak",
 	inventory_image = "vmg_mushroom_steak.png",
 	on_use = minetest.item_eat(4),
@@ -470,39 +470,39 @@ minetest.register_craftitem("valleys_mapgen:mushroom_steak", {
 
 minetest.register_craft({
 	type = "cooking",
-	output = "valleys_mapgen:mushroom_steak",
-	recipe = "valleys_mapgen:huge_mushroom_cap",
+	output = "mmgen_valleys:mushroom_steak",
+	recipe = "mmgen_valleys:huge_mushroom_cap",
 	cooktime = 2,
 })
 
 minetest.register_craft({
 	type = "cooking",
-	output = "valleys_mapgen:mushroom_steak 2",
-	recipe = "valleys_mapgen:giant_mushroom_cap",
+	output = "mmgen_valleys:mushroom_steak 2",
+	recipe = "mmgen_valleys:giant_mushroom_cap",
 	cooktime = 2,
 })
 
-minetest.register_node("valleys_mapgen:glowing_fungal_stone", {
+minetest.register_node("mmgen_valleys:glowing_fungal_stone", {
 	description = "Glowing Fungal Stone",
 	tiles = {"default_stone.png^vmg_glowing_fungal.png",},
 	is_ground_content = true,
 	light_source = 8,
 	groups = {cracky=3, stone=1},
-	drop = {items={ {items={"default:cobble"},}, {items={"valleys_mapgen:glowing_fungus",},},},},
+	drop = {items={ {items={"default:cobble"},}, {items={"mmgen_valleys:glowing_fungus",},},},},
 	sounds = default.node_sound_stone_defaults(),
 })
 
-minetest.register_node("valleys_mapgen:glowing_fungus", {
+minetest.register_node("mmgen_valleys:glowing_fungus", {
 	description = "Glowing Fungus",
 	inventory_image = "vmg_glowing_fungus.png",
 })
 
-minetest.register_node("valleys_mapgen:moon_juice", {
+minetest.register_node("mmgen_valleys:moon_juice", {
 	description = "Moon Juice",
 	inventory_image = "vmg_moon_juice.png",
 })
 
-minetest.register_node("valleys_mapgen:moon_glass", {
+minetest.register_node("mmgen_valleys:moon_glass", {
 	description = "Moon Glass",
 	drawtype = "glasslike",
 	tiles = {"default_glass.png",},
@@ -513,24 +513,24 @@ minetest.register_node("valleys_mapgen:moon_glass", {
 })
 
 minetest.register_craft({
-	output = "valleys_mapgen:moon_juice",
+	output = "mmgen_valleys:moon_juice",
 	recipe = {
-		{"valleys_mapgen:glowing_fungus", "valleys_mapgen:glowing_fungus", "valleys_mapgen:glowing_fungus"},
-		{"valleys_mapgen:glowing_fungus", "valleys_mapgen:glowing_fungus", "valleys_mapgen:glowing_fungus"},
-		{"valleys_mapgen:glowing_fungus", "vessels:glass_bottle", "valleys_mapgen:glowing_fungus"},
+		{"mmgen_valleys:glowing_fungus", "mmgen_valleys:glowing_fungus", "mmgen_valleys:glowing_fungus"},
+		{"mmgen_valleys:glowing_fungus", "mmgen_valleys:glowing_fungus", "mmgen_valleys:glowing_fungus"},
+		{"mmgen_valleys:glowing_fungus", "vessels:glass_bottle", "mmgen_valleys:glowing_fungus"},
 	},
 })
 
 minetest.register_craft({
-	output = "valleys_mapgen:moon_glass",
+	output = "mmgen_valleys:moon_glass",
 	recipe = {
-		{"", "valleys_mapgen:moon_juice", ""},
-		{"", "valleys_mapgen:moon_juice", ""},
+		{"", "mmgen_valleys:moon_juice", ""},
+		{"", "mmgen_valleys:moon_juice", ""},
 		{"", "default:glass", ""},
 	},
 })
 
-minetest.register_node("valleys_mapgen:stalactite", {
+minetest.register_node("mmgen_valleys:stalactite", {
 	description = "Stalactite",
 	tiles = {"default_stone.png"},
 	is_ground_content = false,
@@ -547,7 +547,7 @@ minetest.register_node("valleys_mapgen:stalactite", {
 	sounds = default.node_sound_stone_defaults(),
 })
 
-minetest.register_node("valleys_mapgen:stalagmite", {
+minetest.register_node("mmgen_valleys:stalagmite", {
 	description = "Stalagmite",
 	tiles = {"default_stone.png"},
 	is_ground_content = false,
@@ -573,10 +573,10 @@ minetest.add_group("default:pine_needles", {leafdecay = 7})
 -- Make some new leaves with the same properties.
 local newnode = vmg.clone_node("default:leaves")
 newnode.tiles = {"default_leaves.png^[colorize:#FF0000:20"}
-minetest.register_node("valleys_mapgen:leaves2", newnode)
+minetest.register_node("mmgen_valleys:leaves2", newnode)
 newnode.tiles = {"default_leaves.png^[colorize:#FFFF00:20"}
-minetest.register_node("valleys_mapgen:leaves3", newnode)
+minetest.register_node("mmgen_valleys:leaves3", newnode)
 newnode.tiles = {"default_leaves.png^[colorize:#00FFFF:20"}
-minetest.register_node("valleys_mapgen:leaves4", newnode)
+minetest.register_node("mmgen_valleys:leaves4", newnode)
 newnode.tiles = {"default_leaves.png^[colorize:#00FF00:20"}
-minetest.register_node("valleys_mapgen:leaves5", newnode)
+minetest.register_node("mmgen_valleys:leaves5", newnode)

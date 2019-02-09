@@ -184,9 +184,9 @@ function vmg.generate(minp, maxp, seed)
 	-- minp and maxp strings, used by logs
 	local minps, maxps = minetest.pos_to_string(minp), minetest.pos_to_string(maxp)
 	if vmg.loglevel >= 2 then
-		print("[Valleys Mapgen] Preparing to generate map from " .. minps .. " to " .. maxps .. " ...")
+		print("[MMgen Valleys] Preparing to generate map from " .. minps .. " to " .. maxps .. " ...")
 	elseif vmg.loglevel == 1 then
-		print("[Valleys Mapgen] Generating map from " .. minps .. " to " .. maxps .. " ...")
+		print("[MMgen Valleys] Generating map from " .. minps .. " to " .. maxps .. " ...")
 	end
 	-- start the timer
 	local t0 = os.clock()
@@ -202,35 +202,35 @@ function vmg.generate(minp, maxp, seed)
 	local c_lawn = minetest.get_content_id("default:dirt_with_grass")
 	local c_dry = minetest.get_content_id("default:dirt_with_dry_grass")
 	local c_snow = minetest.get_content_id("default:dirt_with_snow")
-	local c_dirt_clay = minetest.get_content_id("valleys_mapgen:dirt_clayey")
-	local c_lawn_clay = minetest.get_content_id("valleys_mapgen:dirt_clayey_with_grass")
-	local c_dry_clay = minetest.get_content_id("valleys_mapgen:dirt_clayey_with_dry_grass")
-	local c_snow_clay = minetest.get_content_id("valleys_mapgen:dirt_clayey_with_snow")
-	local c_dirt_silt = minetest.get_content_id("valleys_mapgen:dirt_silty")
-	local c_lawn_silt = minetest.get_content_id("valleys_mapgen:dirt_silty_with_grass")
-	local c_dry_silt = minetest.get_content_id("valleys_mapgen:dirt_silty_with_dry_grass")
-	local c_snow_silt = minetest.get_content_id("valleys_mapgen:dirt_silty_with_snow")
-	local c_dirt_sand = minetest.get_content_id("valleys_mapgen:dirt_sandy")
-	local c_lawn_sand = minetest.get_content_id("valleys_mapgen:dirt_sandy_with_grass")
-	local c_dry_sand = minetest.get_content_id("valleys_mapgen:dirt_sandy_with_dry_grass")
-	local c_snow_sand = minetest.get_content_id("valleys_mapgen:dirt_sandy_with_snow")
+	local c_dirt_clay = minetest.get_content_id("mmgen_valleys:dirt_clayey")
+	local c_lawn_clay = minetest.get_content_id("mmgen_valleys:dirt_clayey_with_grass")
+	local c_dry_clay = minetest.get_content_id("mmgen_valleys:dirt_clayey_with_dry_grass")
+	local c_snow_clay = minetest.get_content_id("mmgen_valleys:dirt_clayey_with_snow")
+	local c_dirt_silt = minetest.get_content_id("mmgen_valleys:dirt_silty")
+	local c_lawn_silt = minetest.get_content_id("mmgen_valleys:dirt_silty_with_grass")
+	local c_dry_silt = minetest.get_content_id("mmgen_valleys:dirt_silty_with_dry_grass")
+	local c_snow_silt = minetest.get_content_id("mmgen_valleys:dirt_silty_with_snow")
+	local c_dirt_sand = minetest.get_content_id("mmgen_valleys:dirt_sandy")
+	local c_lawn_sand = minetest.get_content_id("mmgen_valleys:dirt_sandy_with_grass")
+	local c_dry_sand = minetest.get_content_id("mmgen_valleys:dirt_sandy_with_dry_grass")
+	local c_snow_sand = minetest.get_content_id("mmgen_valleys:dirt_sandy_with_snow")
 	local c_desert_sand = minetest.get_content_id("default:desert_sand")
 	local c_sand = minetest.get_content_id("default:sand")
 	local c_gravel = minetest.get_content_id("default:gravel")
-	local c_silt = minetest.get_content_id("valleys_mapgen:silt")
-	local c_clay = minetest.get_content_id("valleys_mapgen:red_clay")
+	local c_silt = minetest.get_content_id("mmgen_valleys:silt")
+	local c_clay = minetest.get_content_id("mmgen_valleys:red_clay")
 	local c_water = minetest.get_content_id("default:water_source")
 	local c_riverwater = minetest.get_content_id("default:river_water_source")
 	local c_lava = minetest.get_content_id("default:lava_source")
 	local c_snow_layer = minetest.get_content_id("default:snow")
-	local c_glowing_fungal_stone = minetest.get_content_id("valleys_mapgen:glowing_fungal_stone")
-	local c_stalactite = minetest.get_content_id("valleys_mapgen:stalactite")
-	local c_stalagmite = minetest.get_content_id("valleys_mapgen:stalagmite")
+	local c_glowing_fungal_stone = minetest.get_content_id("mmgen_valleys:glowing_fungal_stone")
+	local c_stalactite = minetest.get_content_id("mmgen_valleys:stalactite")
+	local c_stalagmite = minetest.get_content_id("mmgen_valleys:stalagmite")
 
 	-- Mushrooms
-	local c_huge_mushroom_cap = minetest.get_content_id("valleys_mapgen:huge_mushroom_cap")
-	local c_giant_mushroom_cap = minetest.get_content_id("valleys_mapgen:giant_mushroom_cap")
-	local c_giant_mushroom_stem = minetest.get_content_id("valleys_mapgen:giant_mushroom_stem")
+	local c_huge_mushroom_cap = minetest.get_content_id("mmgen_valleys:huge_mushroom_cap")
+	local c_giant_mushroom_cap = minetest.get_content_id("mmgen_valleys:giant_mushroom_cap")
+	local c_giant_mushroom_stem = minetest.get_content_id("mmgen_valleys:giant_mushroom_stem")
 	local c_mushroom_fertile_red = minetest.get_content_id("flowers:mushroom_fertile_red")
 	local c_mushroom_fertile_brown = minetest.get_content_id("flowers:mushroom_fertile_brown")
 
@@ -255,8 +255,8 @@ function vmg.generate(minp, maxp, seed)
 	-- Mapgen preparation is now finished. Check the timer to know the elapsed time.
 	local t1 = os.clock()
 	if vmg.loglevel >= 2 then
-		print("[Valleys Mapgen] Mapgen preparation finished in " .. displaytime(t1-t0))
-		print("[Valleys Mapgen] Calculating noises ...")
+		print("[MMgen Valleys] Mapgen preparation finished in " .. displaytime(t1-t0))
+		print("[MMgen Valleys] Calculating noises ...")
 	end
 
 	-- Calculate the noise values
@@ -296,8 +296,8 @@ function vmg.generate(minp, maxp, seed)
 	-- After noise calculation, check the timer
 	local t2 = os.clock()
 	if vmg.loglevel >= 2 then
-		print("[Valleys Mapgen] Noises calculation finished in " .. displaytime(t2-t1))
-		print("[Valleys Mapgen] Collecting data ...")
+		print("[MMgen Valleys] Noises calculation finished in " .. displaytime(t2-t1))
+		print("[MMgen Valleys] Collecting data ...")
 	end
 
 	-- THE CORE OF THE MOD: THE MAPGEN ALGORITHM ITSELF
@@ -602,8 +602,8 @@ function vmg.generate(minp, maxp, seed)
 	-- After data collecting, check timer
 	local t3 = os.clock()
 	if vmg.loglevel >= 2 then
-		print("[Valleys Mapgen] Data collecting finished in " .. displaytime(t3-t2))
-		print("[Valleys Mapgen] Writing data ...")
+		print("[MMgen Valleys] Data collecting finished in " .. displaytime(t3-t2))
+		print("[MMgen Valleys] Writing data ...")
 	end
 
 	-- execute voxelmanip boring stuff to write to the map...
@@ -619,10 +619,10 @@ function vmg.generate(minp, maxp, seed)
 	-- Now mapgen is finished. What an adventure for just generating a chunk ! I hope your processor is speedy and you have enough RAM !
 	local t4 = os.clock()
 	if vmg.loglevel >= 2 then
-		print("[Valleys Mapgen] Data writing finished in " .. displaytime(t4-t3))
+		print("[MMgen Valleys] Data writing finished in " .. displaytime(t4-t3))
 	end
 	if vmg.loglevel >= 1 then
-		print("[Valleys Mapgen] Mapgen finished in " .. displaytime(t4-t0)) 
+		print("[MMgen Valleys] Mapgen finished in " .. displaytime(t4-t0)) 
 	end
 
 	table.insert(mapgen_times.preparation, t1 - t0)
@@ -656,31 +656,31 @@ minetest.register_on_shutdown(function()
 
 	if vmg.loglevel >= 1 then
 		local average, standard_dev
-		print("[Valleys Mapgen] Mapgen statistics:")
+		print("[MMgen Valleys] Mapgen statistics:")
 
 		if vmg.loglevel >= 2 then
 			average, standard_dev = stats(mapgen_times.preparation)
-			print("[Valleys Mapgen] Mapgen preparation step:")
+			print("[MMgen Valleys] Mapgen preparation step:")
 			print("                               average " .. displaytime(average))
 			print("                    standard deviation " .. displaytime(standard_dev))
 		
 			average, standard_dev = stats(mapgen_times.noises)
-			print("[Valleys Mapgen] Noises calculation step:")
+			print("[MMgen Valleys] Noises calculation step:")
 			print("                               average " .. displaytime(average))
 			print("                    standard deviation " .. displaytime(standard_dev))
 		
 			average, standard_dev = stats(mapgen_times.collecting)
-			print("[Valleys Mapgen] Data collecting step:")
+			print("[MMgen Valleys] Data collecting step:")
 			print("                               average " .. displaytime(average))
 			print("                    standard deviation " .. displaytime(standard_dev))
 		
 			average, standard_dev = stats(mapgen_times.writing)
-			print("[Valleys Mapgen] Data writing step:")
+			print("[MMgen Valleys] Data writing step:")
 			print("                               average " .. displaytime(average))
 			print("                    standard deviation " .. displaytime(standard_dev))
 		end
 		average, standard_dev = stats(mapgen_times.total)
-		print("[Valleys Mapgen] TOTAL:")
+		print("[MMgen Valleys] TOTAL:")
 		print("                               average " .. displaytime(average))
 		print("                    standard deviation " .. displaytime(standard_dev))
 	end

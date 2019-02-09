@@ -16,7 +16,7 @@ if vmg.define("plants", true) then
 	})
 
 	vmg.register_plant({
-		nodes = "valleys_mapgen:arrow_arum",
+		nodes = "mmgen_valleys:arrow_arum",
 		cover = 0.40,
 		density = 0.32,
 		priority = 68,
@@ -26,7 +26,7 @@ if vmg.define("plants", true) then
 	})
 
 	vmg.register_plant({
-		nodes = "valleys_mapgen:hibiscus",
+		nodes = "mmgen_valleys:hibiscus",
 		cover = 0.012,
 		density = 0.007,
 		priority = 65,
@@ -36,7 +36,7 @@ if vmg.define("plants", true) then
 	})
 
 	vmg.register_plant({
-		nodes = "valleys_mapgen:calla_lily",
+		nodes = "mmgen_valleys:calla_lily",
 		cover = 0.32,
 		density = 0.06,
 		priority = 63,
@@ -83,7 +83,7 @@ if vmg.define("plants", true) then
 	})
 
 	vmg.register_plant({
-		nodes = {"valleys_mapgen:bird_of_paradise"},
+		nodes = {"mmgen_valleys:bird_of_paradise"},
 		cover = 0.001, --0.001
 		density = 0.0003, --0.0003
 		priority = 52,
@@ -93,7 +93,7 @@ if vmg.define("plants", true) then
 	})
 
 	vmg.register_plant({
-		nodes = {"valleys_mapgen:mangrove_fern"},
+		nodes = {"mmgen_valleys:mangrove_fern"},
 		cover = 0.1,
 		density = 0.05,
 		priority = 50,
@@ -103,7 +103,7 @@ if vmg.define("plants", true) then
 	})
 
 	vmg.register_plant({
-		nodes = {"valleys_mapgen:orchid"},
+		nodes = {"mmgen_valleys:orchid"},
 		cover = 0.02,
 		density = 0.005,
 		priority = 45,
@@ -143,7 +143,7 @@ if vmg.define("plants", true) then
 	})
 
 	vmg.register_plant({
-		nodes = {"valleys_mapgen:gerbera"},
+		nodes = {"mmgen_valleys:gerbera"},
 		cover = 0.010,
 		density = 0.008,
 		priority = 44,
@@ -252,9 +252,9 @@ if vmg.define("trees", true) then
 
 	vmg.register_plant({ -- Mangrove tree
 		nodes = {
-			trunk = "valleys_mapgen:mangrove_tree",
-			leaves = "valleys_mapgen:mangrove_leaves",
-			roots = "valleys_mapgen:mangrove_roots",
+			trunk = "mmgen_valleys:mangrove_tree",
+			leaves = "mmgen_valleys:mangrove_leaves",
+			roots = "mmgen_valleys:mangrove_roots",
 			air = "air", ignore = "ignore",
 		},
 		cover = 0.3,
@@ -279,10 +279,10 @@ if vmg.define("trees", true) then
 			trunk = "default:tree",
 			leaves = { -- get some varied leaves
 				"default:leaves",
-				"valleys_mapgen:leaves2",
-				"valleys_mapgen:leaves3",
-				"valleys_mapgen:leaves4",
-				"valleys_mapgen:leaves5"
+				"mmgen_valleys:leaves2",
+				"mmgen_valleys:leaves3",
+				"mmgen_valleys:leaves4",
+				"mmgen_valleys:leaves5"
 			},
 			fruit = "default:apple",
 			air = "air", ignore = "ignore",
@@ -312,9 +312,9 @@ if vmg.define("trees", true) then
 
 	vmg.register_plant({ -- Banana tree
 		nodes = {
-			trunk = "valleys_mapgen:banana_tree",
-			leaves = "valleys_mapgen:banana_leaves",
-			fruit = "valleys_mapgen:banana",
+			trunk = "mmgen_valleys:banana_tree",
+			leaves = "mmgen_valleys:banana_leaves",
+			fruit = "mmgen_valleys:banana",
 			air = "air", ignore = "ignore",
 		},
 		cover = 0.18,
@@ -334,8 +334,8 @@ if vmg.define("trees", true) then
 
 	vmg.register_plant({ -- Fir tree
 		nodes = {
-			trunk = "valleys_mapgen:fir_tree",
-			leaves = "valleys_mapgen:fir_needles",
+			trunk = "mmgen_valleys:fir_tree",
+			leaves = "mmgen_valleys:fir_needles",
 			air = "air", ignore = "ignore",
 		},
 		cover = 0.7,
@@ -355,8 +355,8 @@ if vmg.define("trees", true) then
 
 	vmg.register_plant({ -- Cherry blossom tree
 		nodes = {
-			trunk = "valleys_mapgen:cherry_blossom_tree",
-			leaves = "valleys_mapgen:cherry_blossom_leaves",
+			trunk = "mmgen_valleys:cherry_blossom_tree",
+			leaves = "mmgen_valleys:cherry_blossom_leaves",
 			air = "air", ignore = "ignore",
 		},
 		cover = 0.13,
@@ -376,8 +376,8 @@ if vmg.define("trees", true) then
 
 	vmg.register_plant({ -- Birch tree
 		nodes = {
-			trunk = "valleys_mapgen:birch_tree",
-			leaves = "valleys_mapgen:birch_leaves",
+			trunk = "mmgen_valleys:birch_tree",
+			leaves = "mmgen_valleys:birch_leaves",
 			air = "air", ignore = "ignore",
 		},
 		cover = 0.07,
@@ -397,8 +397,8 @@ if vmg.define("trees", true) then
 
 	vmg.register_plant({ -- Willow tree
 		nodes = {
-			trunk = "valleys_mapgen:willow_tree",
-			leaves = "valleys_mapgen:willow_leaves",
+			trunk = "mmgen_valleys:willow_tree",
+			leaves = "mmgen_valleys:willow_leaves",
 			air = "air", ignore = "ignore",
 		},
 		cover = 0.05,

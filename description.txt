@@ -1,1 +1,1 @@
-A map generator with valleys, rivers, mountains and many plants.
+A multi_map generator with valleys, rivers, mountains and many plants.
