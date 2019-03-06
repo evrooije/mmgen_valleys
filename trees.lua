@@ -13,7 +13,7 @@ end
 
 -- Fir sapling growth
 minetest.register_abm({
-	nodenames = {"valleys_mapgen:fir_sapling"},
+	nodenames = {"mmgen_valleys:fir_sapling"},
 	interval = 14,
 	chance = 50,
 	action = function(pos, node)
@@ -29,7 +29,7 @@ minetest.register_abm({
 
 -- Banana sapling growth
 minetest.register_abm({
-	nodenames = {"valleys_mapgen:banana_sapling"},
+	nodenames = {"mmgen_valleys:banana_sapling"},
 	interval = 10,
 	chance = 50,
 	action = function(pos, node)
@@ -45,7 +45,7 @@ minetest.register_abm({
 
 -- Birch sapling growth
 minetest.register_abm({
-	nodenames = {"valleys_mapgen:birch_sapling"},
+	nodenames = {"mmgen_valleys:birch_sapling"},
 	interval = 20,
 	chance = 50,
 	action = function(pos, node)
@@ -61,7 +61,7 @@ minetest.register_abm({
 
 -- Cherry Blossom sapling growth
 minetest.register_abm({
-	nodenames = {"valleys_mapgen:cherry_blossom_sapling"},
+	nodenames = {"mmgen_valleys:cherry_blossom_sapling"},
 	interval = 20,
 	chance = 50,
 	action = function(pos, node)
@@ -77,7 +77,7 @@ minetest.register_abm({
 
 -- Mangrove sapling growth
 minetest.register_abm({
-	nodenames = {"valleys_mapgen:mangrove_sapling"},
+	nodenames = {"mmgen_valleys:mangrove_sapling"},
 	interval = 20,
 	chance = 50,
 	action = function(pos, node)
@@ -93,7 +93,7 @@ minetest.register_abm({
 
 -- Willow sapling growth
 minetest.register_abm({
-	nodenames = {"valleys_mapgen:willow_sapling"},
+	nodenames = {"mmgen_valleys:willow_sapling"},
 	interval = 20,
 	chance = 50,
 	action = function(pos, node)
@@ -107,8 +107,19 @@ minetest.register_abm({
 	end
 })
 
-local leaf_types = {"default:leaves", "valleys_mapgen:leaves2", "valleys_mapgen:leaves3", "valleys_mapgen:leaves4", "valleys_mapgen:leaves5"}
+local leaf_types = {"default:leaves", "mmgen_valleys:leaves2", "mmgen_valleys:leaves3", "mmgen_valleys:leaves4", "mmgen_valleys:leaves5"}
 local leaves_colors = vmg.define("leaves_colors", true)
+
+-- reusable buffers for voxelmanip data, to reduce garbage collection
+local data_tree                = {}
+local data_banana_tree         = {}
+local data_birch_tree          = {}
+local data_cherry_blossom_tree = {}
+local data_jungle_tree         = {}
+local data_mangrove_tree       = {}
+local data_pine_tree           = {}
+local data_fir_tree            = {}
+local data_willow_tree         = {}
 
 function default.grow_tree(pos, is_apple_tree) -- Override default function to generate VMG trees
 	-- individual parameters
@@ -127,13 +138,13 @@ function default.grow_tree(pos, is_apple_tree) -- Override default function to g
 	local vm = minetest.get_voxel_manip()
 	local emin, emax = vm:read_from_map({x = pos.x - 4, y = pos.y, z = pos.z - 4}, {x = pos.x + 4, y = pos.y + height + 4, z = pos.z + 4})
 	local area = VoxelArea:new({MinEdge = emin, MaxEdge = emax})
-	local data = vm:get_data()
+	vm:get_data(data_tree)
 	if is_apple_tree then
-		vmg.make_apple_tree(pos, data, area, height, radius, trunk, leaves, minetest.get_content_id("default:apple"), air, ignore)
+		vmg.make_apple_tree(pos, data_tree, area, height, radius, trunk, leaves, minetest.get_content_id("default:apple"), air, ignore)
 	else
-		vmg.make_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
+		vmg.make_tree(pos, data_tree, area, height, radius, trunk, leaves, air, ignore)
 	end
-	vm:set_data(data)
+	vm:set_data(data_tree)
 	vm:write_to_map()
 	vm:update_map()
 end
@@ -145,16 +156,16 @@ function vmg.grow_banana_tree(pos)
 	local radius = 3 + rand
 
 	-- VoxelManip stuff
-	local leaves = minetest.get_content_id("valleys_mapgen:banana_leaves")
-	local trunk = minetest.get_content_id("valleys_mapgen:banana_tree")
+	local leaves = minetest.get_content_id("mmgen_valleys:banana_leaves")
+	local trunk = minetest.get_content_id("mmgen_valleys:banana_tree")
 	local air = minetest.get_content_id("air")
 	local ignore = minetest.get_content_id("ignore")
 	local vm = minetest.get_voxel_manip()
 	local emin, emax = vm:read_from_map({x = pos.x - 4, y = pos.y, z = pos.z - 4}, {x = pos.x + 4, y = pos.y + height + 4, z = pos.z + 4})
 	local area = VoxelArea:new({MinEdge = emin, MaxEdge = emax})
-	local data = vm:get_data()
-	vmg.make_banana_tree(pos, data, area, height, radius, trunk, leaves, minetest.get_content_id("valleys_mapgen:banana"), air, ignore)
-	vm:set_data(data)
+	vm:get_data(data_banana_tree)
+	vmg.make_banana_tree(pos, data_banana_tree, area, height, radius, trunk, leaves, minetest.get_content_id("mmgen_valleys:banana"), air, ignore)
+	vm:set_data(data_banana_tree)
 	vm:write_to_map()
 	vm:update_map()
 end
@@ -165,16 +176,16 @@ function vmg.grow_birch(pos)
 	local radius = 2 + rand
 
 	-- VoxelManip stuff
-	local leaves = minetest.get_content_id("valleys_mapgen:birch_leaves")
-	local trunk = minetest.get_content_id("valleys_mapgen:birch_tree")
+	local leaves = minetest.get_content_id("mmgen_valleys:birch_leaves")
+	local trunk = minetest.get_content_id("mmgen_valleys:birch_tree")
 	local air = minetest.get_content_id("air")
 	local ignore = minetest.get_content_id("ignore")
 	local vm = minetest.get_voxel_manip()
 	local emin, emax = vm:read_from_map({x = pos.x - 4, y = pos.y, z = pos.z - 4}, {x = pos.x + 4, y = pos.y + height + 4, z = pos.z + 4})
 	local area = VoxelArea:new({MinEdge = emin, MaxEdge = emax})
-	local data = vm:get_data()
-	vmg.make_birch_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
-	vm:set_data(data)
+	vm:get_data(data_birch_tree)
+	vmg.make_birch_tree(pos, data_birch_tree, area, height, radius, trunk, leaves, air, ignore)
+	vm:set_data(data_birch_tree)
 	vm:write_to_map()
 	vm:update_map()
 end
@@ -186,16 +197,16 @@ function vmg.grow_cherry_blossom_tree(pos)
 	local radius = 3 + rand
 
 	-- VoxelManip stuff
-	local leaves = minetest.get_content_id("valleys_mapgen:cherry_blossom_leaves")
-	local trunk = minetest.get_content_id("valleys_mapgen:cherry_blossom_tree")
+	local leaves = minetest.get_content_id("mmgen_valleys:cherry_blossom_leaves")
+	local trunk = minetest.get_content_id("mmgen_valleys:cherry_blossom_tree")
 	local air = minetest.get_content_id("air")
 	local ignore = minetest.get_content_id("ignore")
 	local vm = minetest.get_voxel_manip()
 	local emin, emax = vm:read_from_map({x = pos.x - 4, y = pos.y, z = pos.z - 4}, {x = pos.x + 4, y = pos.y + height + 4, z = pos.z + 4})
 	local area = VoxelArea:new({MinEdge = emin, MaxEdge = emax})
-	local data = vm:get_data()
-	vmg.make_cherry_blossom_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
-	vm:set_data(data)
+	vm:get_data(data_cherry_blossom_tree)
+	vmg.make_cherry_blossom_tree(pos, data_cherry_blossom_tree, area, height, radius, trunk, leaves, air, ignore)
+	vm:set_data(data_cherry_blossom_tree)
 	vm:write_to_map()
 	vm:update_map()
 end
@@ -212,10 +223,10 @@ function default.grow_jungle_tree(pos)
 	local vm = minetest.get_voxel_manip()
 	local emin, emax = vm:read_from_map({x = pos.x - 8, y = pos.y - 1, z = pos.z - 8}, {x = pos.x + 8, y = pos.y + height + 5, z = pos.z + 8})
 	local area = VoxelArea:new({MinEdge = emin, MaxEdge = emax})
-	local data = vm:get_data()
-	vmg.make_jungle_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
+	vm:get_data(data_jungle_tree)
+	vmg.make_jungle_tree(pos, data_jungle_tree, area, height, radius, trunk, leaves, air, ignore)
 	vmg.execute_after_mapgen()
-	vm:set_data(data)
+	vm:set_data(data_jungle_tree)
 	vm:write_to_map()
 	vm:update_map()
 end
@@ -232,10 +243,10 @@ function default.grow_mangrove_tree(pos)
 	local vm = minetest.get_voxel_manip()
 	local emin, emax = vm:read_from_map({x = pos.x - 2, y = pos.y - 1, z = pos.z - 2}, {x = pos.x + 3, y = pos.y + height + 2, z = pos.z + 3})
 	local area = VoxelArea:new({MinEdge = emin, MaxEdge = emax})
-	local data = vm:get_data()
-	vmg.make_mangrove_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
+	vm:get_data(data_mangrove_tree)
+	vmg.make_mangrove_tree(pos, data_mangrove_tree, area, height, radius, trunk, leaves, air, ignore)
 	vmg.execute_after_mapgen()
-	vm:set_data(data)
+	vm:set_data(data_mangrove_tree)
 	vm:write_to_map()
 	vm:update_map()
 end
@@ -252,9 +263,9 @@ function default.grow_pine_tree(pos)
 	local vm = minetest.get_voxel_manip()
 	local emin, emax = vm:read_from_map({x = pos.x - 6, y = pos.y - 1, z = pos.z - 6}, {x = pos.x + 6, y = pos.y + height + 2, z = pos.z + 6})
 	local area = VoxelArea:new({MinEdge = emin, MaxEdge = emax})
-	local data = vm:get_data()
-	vmg.make_pine_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
-	vm:set_data(data)
+	vm:get_data(data_pine_tree)
+	vmg.make_pine_tree(pos, data_pine_tree, area, height, radius, trunk, leaves, air, ignore)
+	vm:set_data(data_pine_tree)
 	vm:write_to_map()
 	vm:update_map()
 end
@@ -264,16 +275,16 @@ function vmg.grow_fir_tree(pos)
 	local height = math.floor(9 + 6 * rand)
 	local radius = 4 + 2 * rand
 
-	local leaves = minetest.get_content_id("valleys_mapgen:fir_needles")
-	local trunk = minetest.get_content_id("valleys_mapgen:fir_tree")
+	local leaves = minetest.get_content_id("mmgen_valleys:fir_needles")
+	local trunk = minetest.get_content_id("mmgen_valleys:fir_tree")
 	local air = minetest.get_content_id("air")
 	local ignore = minetest.get_content_id("ignore")
 	local vm = minetest.get_voxel_manip()
 	local emin, emax = vm:read_from_map({x = pos.x - 6, y = pos.y - 1, z = pos.z - 6}, {x = pos.x + 6, y = pos.y + height + 2, z = pos.z + 6})
 	local area = VoxelArea:new({MinEdge = emin, MaxEdge = emax})
-	local data = vm:get_data()
-	vmg.make_fir_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
-	vm:set_data(data)
+	vm:get_data(data_fir_tree)
+	vmg.make_fir_tree(pos, data_fir_tree, area, height, radius, trunk, leaves, air, ignore)
+	vm:set_data(data_fir_tree)
 	vm:write_to_map()
 	vm:update_map()
 end
@@ -285,23 +296,23 @@ function vmg.grow_willow_tree(pos)
 	local radius = 5 + rand
 
 	-- VoxelManip stuff
-	local leaves = minetest.get_content_id("valleys_mapgen:willow_leaves")
-	local trunk = minetest.get_content_id("valleys_mapgen:willow_tree")
+	local leaves = minetest.get_content_id("mmgen_valleys:willow_leaves")
+	local trunk = minetest.get_content_id("mmgen_valleys:willow_tree")
 	local air = minetest.get_content_id("air")
 	local ignore = minetest.get_content_id("ignore")
 	local vm = minetest.get_voxel_manip()
 	local emin, emax = vm:read_from_map({x = pos.x - 4, y = pos.y, z = pos.z - 4}, {x = pos.x + 4, y = pos.y + height + 4, z = pos.z + 4})
 	local area = VoxelArea:new({MinEdge = emin, MaxEdge = emax})
-	local data = vm:get_data()
-	vmg.make_willow_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
-	vm:set_data(data)
+	vm:get_data(data_willow_tree)
+	vmg.make_willow_tree(pos, data_willow_tree, area, height, radius, trunk, leaves, air, ignore)
+	vm:set_data(data_willow_tree)
 	vm:write_to_map()
 	vm:update_map()
 end
 
 function vmg.make_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
 	if vmg.loglevel >= 3 then
-		print("[Valleys Mapgen] Generating tree at " .. minetest.pos_to_string(pos) .. " ...")
+		print("[MMgen Valleys] Generating tree at " .. minetest.pos_to_string(pos) .. " ...")
 	end
 	local ystride = area.ystride -- Useful to get the index above
 	local iv = area:indexp(pos)
@@ -316,7 +327,7 @@ end
 
 function vmg.make_apple_tree(pos, data, area, height, radius, trunk, leaves, fruit, air, ignore) -- Same code but with apples
 	if vmg.loglevel >= 3 then
-		print("[Valleys Mapgen] Generating apple tree at " .. minetest.pos_to_string(pos) .. " ...")
+		print("[MMgen Valleys] Generating apple tree at " .. minetest.pos_to_string(pos) .. " ...")
 	end
 	local ystride = area.ystride -- Useful to get the index above
 	local iv = area:indexp(pos)
@@ -331,7 +342,7 @@ end
 
 function vmg.make_banana_tree(pos, data, area, height, radius, trunk, leaves, fruit, air, ignore)
 	if vmg.loglevel >= 3 then
-		print("[Valleys Mapgen] Generating banana tree at " .. minetest.pos_to_string(pos) .. " ...")
+		print("[MMgen Valleys] Generating banana tree at " .. minetest.pos_to_string(pos) .. " ...")
 	end
 	local ystride = area.ystride -- Useful to get the index above
 	local iv = area:indexp(pos)
@@ -346,7 +357,7 @@ end
 
 function vmg.make_birch_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
 	if vmg.loglevel >= 3 then
-		print("[Valleys Mapgen] Generating birch tree at " .. minetest.pos_to_string(pos) .. " ...")
+		print("[MMgen Valleys] Generating birch tree at " .. minetest.pos_to_string(pos) .. " ...")
 	end
 	local ystride = area.ystride -- Useful to get the index above
 	local iv = area:indexp(pos)
@@ -361,7 +372,7 @@ end
 
 function vmg.make_cherry_blossom_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
 	if vmg.loglevel >= 3 then
-		print("[Valleys Mapgen] Generating cherry blossom tree at " .. minetest.pos_to_string(pos) .. " ...")
+		print("[MMgen Valleys] Generating cherry blossom tree at " .. minetest.pos_to_string(pos) .. " ...")
 	end
 	local ystride = area.ystride -- Useful to get the index above
 	local iv = area:indexp(pos)
@@ -420,7 +431,7 @@ end
 
 function vmg.make_jungle_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
 	if vmg.loglevel >= 3 then
-		print("[Valleys Mapgen] Generating jungle tree at " .. minetest.pos_to_string(pos) .. " ...")
+		print("[MMgen Valleys] Generating jungle tree at " .. minetest.pos_to_string(pos) .. " ...")
 	end
 	local ystride = area.ystride -- Useful to get the index above
 	local iv = area:indexp(pos)
@@ -436,7 +447,7 @@ end
 
 function vmg.make_mangrove_tree(pos, data, area, height, radius, trunk, leaves, roots, air, ignore)
 	if vmg.loglevel >= 3 then
-		print("[Valleys Mapgen] Generating mangrove tree at " .. minetest.pos_to_string(pos) .. " ...")
+		print("[MMgen Valleys] Generating mangrove tree at " .. minetest.pos_to_string(pos) .. " ...")
 	end
 	local ystride = area.ystride -- Useful to get the index above
 	local iv = area:indexp(pos)
@@ -452,7 +463,7 @@ end
 
 function vmg.make_fir_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
 	if vmg.loglevel >= 3 then
-		print("[Valleys Mapgen] Generating fir tree at " .. minetest.pos_to_string(pos) .. " ...")
+		print("[MMgen Valleys] Generating fir tree at " .. minetest.pos_to_string(pos) .. " ...")
 	end
 	local ystride = area.ystride -- Useful to get the index above
 	local iv = area:indexp(pos)
@@ -487,7 +498,7 @@ end
 
 function vmg.make_pine_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
 	if vmg.loglevel >= 3 then
-		print("[Valleys Mapgen] Generating pine tree at " .. minetest.pos_to_string(pos) .. " ...")
+		print("[MMgen Valleys] Generating pine tree at " .. minetest.pos_to_string(pos) .. " ...")
 	end
 	local ystride = area.ystride -- Useful to get the index above
 	local iv = area:indexp(pos)
@@ -523,7 +534,7 @@ end
 
 function vmg.make_willow_tree(pos, data, area, height, radius, trunk, leaves, air, ignore)
 	if vmg.loglevel >= 3 then
-		print("[Valleys Mapgen] Generating willow tree at " .. minetest.pos_to_string(pos) .. " ...")
+		print("[MMgen Valleys] Generating willow tree at " .. minetest.pos_to_string(pos) .. " ...")
 	end
 	local ystride = area.ystride -- Useful to get the index above
 	local iv = area:indexp(pos)
